@@ -1,5 +1,6 @@
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import { Link } from 'react-router-dom';
 function StaffItem({ staff }) {
 
     return (
@@ -18,7 +19,20 @@ function StaffItem({ staff }) {
             </TableCell>
 
             <TableCell sx={{ width: 100 }} align="left">
-                <button>view</button>
+                <Link to={`/staff/${staff._id}`}>
+                    <button
+                        style={{
+                            width: "50px",
+                            height: "25px",
+                            backgroundColor: "#03bafc",
+                            border: "none",
+                            borderRadius: "4px",
+                            color: "white"
+                        }}
+                    >
+                        Xem
+                    </button>
+                </Link>
             </TableCell>
 
         </TableRow>
