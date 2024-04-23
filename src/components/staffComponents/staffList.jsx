@@ -121,12 +121,12 @@ export default function StaffList() {
 
                 <Table sx={{ minWidth: 500, maxWidth: 1470, marginTop: 2, marginX: 4 }} aria-label="custom pagination table">
                     <TableHead>
-                        <TableRow>
-                            <TableCell>Họ và tên</TableCell>
-                            <TableCell >Email</TableCell>
-                            <TableCell >Chức vụ</TableCell>
-                            <TableCell >Phòng ban</TableCell>
-                            <TableCell ></TableCell>
+                        <TableRow >
+                            <TableCell sx={{ fontSize: "18px" }}>Họ và tên</TableCell>
+                            <TableCell sx={{ fontSize: "18px" }}>Email</TableCell>
+                            <TableCell sx={{ fontSize: "18px" }}>Chức vụ</TableCell>
+                            <TableCell sx={{ fontSize: "18px" }}>Phòng ban</TableCell>
+                            <TableCell sx={{ fontSize: "18px" }}></TableCell>
                         </TableRow>
                     </TableHead>
 

@@ -16,8 +16,7 @@ import { Link } from 'react-router-dom';
 
 const pages = [
     { name: 'Home', path: '/' },
-    { name: 'Staffs', path: '/staffs' },
-    { name: 'Blog', path: '/blog' },
+    { name: 'Staffs', path: '/staffs' }
 ];
 
 const settings = [
@@ -47,8 +46,8 @@ function ResponsiveAppBar() {
     };
 
     return (
-        <AppBar position="static">
-            <Container maxWidth="xl">
+        <AppBar position="static" >
+            <Container maxWidth="xl" >
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Typography

@@ -20,7 +20,7 @@ const ArrowHeader = ({ text }) => {
 
     return (
         <div style={arrowHeaderStyle}>
-            <div ></div>
+
             {text}
         </div>
     );
