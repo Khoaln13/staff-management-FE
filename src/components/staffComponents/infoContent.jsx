@@ -1,5 +1,6 @@
 
 import WorkHistory from "./workHistory";
+import StaffDetailProfile from "./staffDetailProfile";
 function InfoContent(selectedOption, workHistories) {
 
 
@@ -15,7 +16,7 @@ function InfoContent(selectedOption, workHistories) {
             );
         case 'edit_profile':
             return (
-                <p>edit_profile</p>
+                <StaffDetailProfile />
 
             );
         default:

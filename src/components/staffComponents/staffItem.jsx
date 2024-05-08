@@ -27,7 +27,8 @@ function StaffItem({ staff }) {
                             backgroundColor: "#03bafc",
                             border: "none",
                             borderRadius: "4px",
-                            color: "white"
+                            color: "white",
+                            cursor: "pointer",
                         }}
                     >
                         Xem

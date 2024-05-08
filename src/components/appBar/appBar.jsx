@@ -12,27 +12,20 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link } from 'react-router-dom';
-
-const pages = [
-    { name: 'Home', path: '/' },
-    { name: 'Staffs', path: '/staffs' }
-];
-
-const settings = [
-    { name: 'Profile', path: '/profile' },
-    { name: 'Account', path: '/account' },
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Logout', path: '/logout' },
-];
+import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const location = useLocation();
+    const currentUser = useSelector((state) => state.auth.login.currentUser);
+    const userId = currentUser ? currentUser.user._id : null; // Khai báo userId ở đây
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
+
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -45,10 +38,25 @@ function ResponsiveAppBar() {
         setAnchorElUser(null);
     };
 
+    const staffPage = userId ? { name: 'Thông tin nhân viên ', path: `/staff/${userId}` } : null;
+    const pages = [
+        { name: 'Trang chủ', path: '/' },
+        { name: 'Nhân viên', path: '/staffs' },
+        staffPage,
+    ].filter(page => page !== null);
+
+    const settings = [
+        { name: 'Profile', path: '/profile' },
+        { name: 'Account', path: '/account' },
+        { name: 'Dashboard', path: '/dashboard' },
+        { name: 'Logout', path: '/logout' },
+    ];
+
     return (
-        <AppBar position="static" >
+        <AppBar position="static" sx={{ background: 'linear-gradient(to bottom, rgba(3, 11, 252, 0.7), rgba(3, 11, 252, 0.2))' }}>
             <Container maxWidth="xl" >
                 <Toolbar disableGutters>
+                    {/* logo khi rộng */}
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Typography
                         variant="h6"
@@ -67,6 +75,7 @@ function ResponsiveAppBar() {
                     >
                         LOGO
                     </Typography>
+                    {/* menu chọn trang khi thu nhỏ */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
@@ -97,14 +106,24 @@ function ResponsiveAppBar() {
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                                    <Typography component={Link} to={page.path} textAlign="center" variant="body1">
+                                <MenuItem
+                                    key={page.name}
+                                    onClick={handleCloseNavMenu}
+
+                                >
+                                    <Typography
+                                        component={Link}
+                                        to={page.path}
+                                        textAlign="center"
+                                        variant="body1"
+                                    >
                                         {page.name}
                                     </Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
                     </Box>
+                    {/* logo khi thu nhỏ */}
                     <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
                         variant="h5"
@@ -124,23 +143,39 @@ function ResponsiveAppBar() {
                     >
                         LOGO
                     </Typography>
+
+                    {/* button chọn trang khi mở rộng */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
                             <Button
                                 key={page.name}
                                 component={Link}
                                 to={page.path}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                onClick={() => {
+                                    handleCloseNavMenu();
+                                }}
+                                sx={{
+                                    my: 2,
+                                    color: '#0a0a0a',
+                                    display: 'block',
+                                    '&:hover': {
+                                        color: 'white', // Màu chữ khi di chuột vào
+                                    },
+                                    '&.Mui-selected': {
+                                        color: 'white', // Màu chữ khi MenuItem được chọn
+                                    },
+                                }}
+                                className={location.pathname === page.path ? 'Mui-selected' : ''}
                             >
                                 {page.name}
                             </Button>
                         ))}
                     </Box>
 
+                    {/* avatar chọn chức năng */}
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, border: "2px solid", borderColor: "white" }}>
                                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                             </IconButton>
                         </Tooltip>
@@ -171,7 +206,7 @@ function ResponsiveAppBar() {
                     </Box>
                 </Toolbar>
             </Container>
-        </AppBar>
+        </AppBar >
     );
 }
 export default ResponsiveAppBar;
