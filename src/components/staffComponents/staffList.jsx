@@ -43,7 +43,7 @@ export default function StaffList() {
 
 
     const handleGoBack = () => {
-        // setFilterValue({});
+
         setError("");
     };
 
@@ -92,6 +92,7 @@ export default function StaffList() {
                     ...user,
                     accessToken: data.accessToken,
                 }
+
                 dispatch(loginSuccess(refreshUser))
                 config.headers["token"] = `Bearer ${data.accessToken}`;
             }
@@ -104,7 +105,7 @@ export default function StaffList() {
     useEffect(() => {
         if (filterValue) {
             // Nếu có giá trị trong input, gọi API với tên nhân viên đã lọc
-            fetchStaffsFilterAPI(apiCurrentPage, rowsPerPage, filterValue).then((response) => {
+            fetchStaffsFilterAPI(apiCurrentPage, rowsPerPage, filterValue, user.accessToken, axiosJWT).then((response) => {
 
                 setRows(response.staffs);
                 setcurrentPage(response.currentPage - 1);
