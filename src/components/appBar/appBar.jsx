@@ -12,16 +12,26 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut } from '../../redux/apiRequest';
+import { createAxios } from '../../redux/createInstance';
+import { logoutSuccess } from '../../redux/authSlice';
 
 function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+
     const location = useLocation();
     const currentUser = useSelector((state) => state.auth.login.currentUser);
-    const userId = currentUser ? currentUser.user._id : null; // Khai báo userId ở đây
-
+    const userId = currentUser?.user._id; // Khai báo userId ở đây
+    const accessToken = currentUser?.accessToken;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    let axiosJWT = createAxios(currentUser, dispatch, logoutSuccess)
+    const handleLogout = () => {
+        logOut(dispatch, userId, navigate, accessToken, axiosJWT)
+    }
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -38,6 +48,7 @@ function ResponsiveAppBar() {
         setAnchorElUser(null);
     };
 
+
     const staffPage = userId ? { name: 'Thông tin nhân viên ', path: `/staff/${userId}` } : null;
     const pages = [
         { name: 'Trang chủ', path: '/' },
@@ -49,7 +60,7 @@ function ResponsiveAppBar() {
         { name: 'Profile', path: '/profile' },
         { name: 'Account', path: '/account' },
         { name: 'Dashboard', path: '/dashboard' },
-        { name: 'Logout', path: '/logout' },
+        { name: 'Logout', onClick: handleLogout },
     ];
 
     return (
@@ -196,7 +207,7 @@ function ResponsiveAppBar() {
                             onClose={handleCloseUserMenu}
                         >
                             {settings.map((setting) => (
-                                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                                <MenuItem key={setting.name} onClick={setting.onClick || handleCloseUserMenu}>
                                     <Typography component={Link} to={setting.path} textAlign="center" variant="body1">
                                         {setting.name}
                                     </Typography>
