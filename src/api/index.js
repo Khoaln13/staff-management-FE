@@ -78,3 +78,14 @@ export const fetchWorkHistoryByEmployeeId = async (staffId) => {
 
 }
 
+export const refreshToken = async () => {
+    try {
+        const res = await axios.post(`${API_ROOT}/auth/refresh`, {}, {
+            withCredentials: true,
+        });
+
+        return res.data
+    } catch (error) {
+        console.log(error);
+    }
+}

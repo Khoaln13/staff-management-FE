@@ -1,5 +1,5 @@
 import axios from "axios";
-import { loginFailed, loginStart, loginSuccess, registerStart, registerSuccess, registerFailed } from "./authSlice";
+import { loginFailed, loginStart, loginSuccess, registerStart, registerSuccess, registerFailed, logoutStart, logoutSuccess, logoutFailed } from "./authSlice";
 import { API_ROOT } from "../util/constants";
 
 export const loginAccount = async (account, dispatch, navigate) => {
@@ -24,3 +24,19 @@ export const registerUser = async (user, dispatch, navigate) => {
         dispatch(registerFailed())
     }
 };
+
+export const logOut = async (dispatch, id, navigate, accessToken, axiosJWT) => {
+    dispatch(logoutStart());
+    try {
+        await axiosJWT.post(`${API_ROOT}/auth/logout`, id, {
+            withCredentials: true,
+            headers: { token: `Bearer ${accessToken}` }
+        });
+        dispatch(logoutSuccess());
+        navigate("/login")
+    } catch (error) {
+        console.log(error);
+        dispatch(logoutFailed());
+
+    }
+}

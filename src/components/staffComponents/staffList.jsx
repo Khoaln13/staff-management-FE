@@ -10,17 +10,15 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TableHead from '@mui/material/TableHead';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
+
 
 import Pagination from '../pagination/paginationAction';
 import StaffItem from './staffItem';
 import StaffFilter from '../filter/satffFilter';
 import ArrowHeader from '../appBar/arrowHeader';
 import { fetchStaffsPaginationAPI, fetchStaffsFilterAPI } from '../../api';
-import { API_ROOT } from '../../util/constants';
 import { loginSuccess } from '../../redux/authSlice';
-
+import { createAxios } from '../../redux/createInstance';
 
 
 export default function StaffList() {
@@ -34,13 +32,8 @@ export default function StaffList() {
     const [filterValue, setFilterValue] = useState()
     const [error, setError] = useState("")
     const user = useSelector((state) => state.auth.login.currentUser)
-    let axiosJWT = axios.create({
-
-    })
-
-
     const dispatch = useDispatch();
-
+    let axiosJWT = createAxios(user, dispatch, loginSuccess)
 
     const handleGoBack = () => {
 
@@ -69,72 +62,44 @@ export default function StaffList() {
             department: department
         });
     }
-    const refreshToken = async () => {
-        try {
-            const res = await axios.post(`${API_ROOT}/auth/refresh`, {}, {
-                withCredentials: true,
-            });
 
-            return res.data
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
-    axiosJWT.interceptors.request.use(
-        async (config) => {
-            let date = new Date()
-            const decodedToken = jwtDecode(user?.accessToken);
-            if (decodedToken.exp < date.getTime() / 1000) {
-                const data = await refreshToken()
 
-                const refreshUser = {
-                    ...user,
-                    accessToken: data.accessToken,
-                }
-
-                dispatch(loginSuccess(refreshUser))
-                config.headers["token"] = `Bearer ${data.accessToken}`;
-            }
-            return config;
-        },
-        (error) => {
-            return Promise.reject(error);
-        }
-    );
     useEffect(() => {
-        if (filterValue) {
-            // Nếu có giá trị trong input, gọi API với tên nhân viên đã lọc
-            fetchStaffsFilterAPI(apiCurrentPage, rowsPerPage, filterValue, user.accessToken, axiosJWT).then((response) => {
+        if (user) {
+            if (filterValue) {
+                // Nếu có giá trị trong input, gọi API với tên nhân viên đã lọc
+                fetchStaffsFilterAPI(apiCurrentPage, rowsPerPage, filterValue, user.accessToken, axiosJWT).then((response) => {
 
-                setRows(response.staffs);
-                setcurrentPage(response.currentPage - 1);
-                setApiCurrentPage(response.currentPage);
-                setLoading(false);
-                setRowsPerPage(response.limit);
-                setTotalRows(response.totalStaffs);
+                    setRows(response.staffs);
+                    setcurrentPage(response.currentPage - 1);
+                    setApiCurrentPage(response.currentPage);
+                    setLoading(false);
+                    setRowsPerPage(response.limit);
+                    setTotalRows(response.totalStaffs);
 
-            }).catch(error => {
-                console.error("Error fetching staff data: ", error);
-                setError("" + error)
-                setLoading(false);
-            });
-        } else {
-            // Nếu không có giá trị trong input, gọi API như bình thường
-            fetchStaffsPaginationAPI(apiCurrentPage, rowsPerPage, user.accessToken, axiosJWT).then((response) => {
+                }).catch(error => {
+                    console.error("Error fetching staff data: ", error);
+                    setError("" + error)
+                    setLoading(false);
+                });
+            } else {
+                // Nếu không có giá trị trong input, gọi API như bình thường
+                fetchStaffsPaginationAPI(apiCurrentPage, rowsPerPage, user.accessToken, axiosJWT).then((response) => {
 
-                setRows(response.staffs);
-                setcurrentPage(response.currentPage - 1);
-                setApiCurrentPage(response.currentPage);
-                setLoading(false);
-                setRowsPerPage(response.limit);
-                setTotalRows(response.totalStaffs);
+                    setRows(response.staffs);
+                    setcurrentPage(response.currentPage - 1);
+                    setApiCurrentPage(response.currentPage);
+                    setLoading(false);
+                    setRowsPerPage(response.limit);
+                    setTotalRows(response.totalStaffs);
 
-            }).catch(error => {
-                console.error("Error fetching staff data: ", error);
-                setError("" + error)
-                setLoading(false);
-            });
+                }).catch(error => {
+                    console.error("Error fetching staff data: ", error);
+                    setError("" + error)
+                    setLoading(false);
+                });
+            }
         }
     }, [apiCurrentPage, rowsPerPage, filterValue]);
     if (error) {

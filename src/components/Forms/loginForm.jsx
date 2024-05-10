@@ -1,10 +1,10 @@
 // src/LoginForm.js
 import { useState } from 'react';
-import { TextField, Button, Typography } from '@mui/material';
+import { TextField, Button } from '@mui/material';
 import { loginAccount } from '../../redux/apiRequest';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -35,12 +35,12 @@ function LoginForm() {
             />
 
             <Button variant="contained" type="submit">Login</Button>
-            <Typography variant="body2">
+            {/* <Typography variant="body2">
                 Chưa có tài khoản?{' '}
                 <Link to="/register">
                     Đăng ký
                 </Link>
-            </Typography>
+            </Typography> */}
         </form>
 
     );
