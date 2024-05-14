@@ -28,6 +28,7 @@ export default function StaffList() {
     const [apiCurrentPage, setApiCurrentPage] = useState(1)
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalRows, setTotalRows] = useState(0)
+    const [ischangeRows, setIsChangeRows] = useState(false)
     const [loading, setLoading] = useState(true);
     const [filterValue, setFilterValue] = useState()
     const [error, setError] = useState("")
@@ -50,6 +51,7 @@ export default function StaffList() {
     };
 
     const handleChangeRowsPerPage = (event) => {
+        setIsChangeRows(true)
         setRowsPerPage(parseInt(event.target.value));
         setApiCurrentPage(1);
         setcurrentPage(0);
@@ -67,9 +69,10 @@ export default function StaffList() {
 
     useEffect(() => {
         if (user) {
+            let apiRowPerPage = ischangeRows ? rowsPerPage : 10;
             if (filterValue) {
-                // Nếu có giá trị trong input, gọi API với tên nhân viên đã lọc
-                fetchStaffsFilterAPI(apiCurrentPage, rowsPerPage, filterValue, user.accessToken, axiosJWT).then((response) => {
+
+                fetchStaffsFilterAPI(apiCurrentPage, apiRowPerPage, filterValue, user.accessToken, axiosJWT).then((response) => {
 
                     setRows(response.staffs);
                     setcurrentPage(response.currentPage - 1);
@@ -77,6 +80,7 @@ export default function StaffList() {
                     setLoading(false);
                     setRowsPerPage(response.limit);
                     setTotalRows(response.totalStaffs);
+                    setIsChangeRows(false);
 
                 }).catch(error => {
                     console.error("Error fetching staff data: ", error);
@@ -84,8 +88,8 @@ export default function StaffList() {
                     setLoading(false);
                 });
             } else {
-                // Nếu không có giá trị trong input, gọi API như bình thường
-                fetchStaffsPaginationAPI(apiCurrentPage, rowsPerPage, user.accessToken, axiosJWT).then((response) => {
+
+                fetchStaffsPaginationAPI(apiCurrentPage, apiRowPerPage, user.accessToken, axiosJWT).then((response) => {
 
                     setRows(response.staffs);
                     setcurrentPage(response.currentPage - 1);
@@ -93,6 +97,7 @@ export default function StaffList() {
                     setLoading(false);
                     setRowsPerPage(response.limit);
                     setTotalRows(response.totalStaffs);
+                    setIsChangeRows(false);
 
                 }).catch(error => {
                     console.error("Error fetching staff data: ", error);

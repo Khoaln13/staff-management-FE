@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
@@ -10,31 +10,36 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { fetchStaffInfoAPI, fetchWorkHistoryByEmployeeId } from '../../api';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchStaffInfoAPI, fetchWorkHistoryByEmployeeId, fetchStaffFullInfoAPI } from '../../../api';
 import InfoContent from './infoContent';
-import ArrowHeader from '../appBar/arrowHeader';
-import Profile from './profile';
+import ArrowHeader from '../../appBar/arrowHeader';
+import Profile from '../profile';
 import Typography from '@mui/material/Typography';
+import { createAxios } from '../../../redux/createInstance';
+import { loginSuccess } from '../../../redux/authSlice';
 
 const options = [
     { value: 'edit_profile', label: 'Profile', icon: <AccountBoxIcon /> },
     { value: 'salary', label: 'Bảng lương', icon: <AttachMoneyIcon /> },
     { value: 'work_history', label: 'Lịch sử công việc', icon: <WorkHistoryIcon /> },
 ];
+export const userInfoContext = createContext();
 
 
 function UserInformation() {
     const [selectedOption, setSelectedOption] = useState(options[0].value);
     const { id } = useParams(); // Lấy giá trị của tham số id từ URL
     const [staffInfo, setStaffInfo] = useState({});
+    const [staffFullInfo, setStaffFullInfo] = useState({});
     const [workHistories, setWorkHistories] = useState([]);
     const [loading, setLoading] = useState(true);
     const user = useSelector((state) => state.auth.login.currentUser)
-
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
     useEffect(() => {
 
-        fetchStaffInfoAPI(id, user.accessToken)
+        fetchStaffInfoAPI(id, user.accessToken, axiosJWT)
             .then((response) => {
                 setStaffInfo(response);
                 setLoading(false)
@@ -44,16 +49,26 @@ function UserInformation() {
                 console.error('Error fetching staff info: ', error);
             });
 
-    }, [id]);
+        fetchStaffFullInfoAPI(id, user.accessToken, axiosJWT)
+            .then((response) => {
+                setStaffFullInfo(response);
+                setLoading(false)
 
-    useEffect(() => {
+            })
+            .catch((error) => {
+                console.error('Error fetching staff full info: ', error);
+            });
+
         fetchWorkHistoryByEmployeeId(id)
             .then((response) => {
                 setWorkHistories(response)
             }).catch((error) => {
                 console.error('Error fetching work-history info: ', error);
             });
-    }, [id])
+
+    }, [id]);
+
+
 
     const handleChange = (option) => {
         setSelectedOption(option.value);
@@ -62,7 +77,7 @@ function UserInformation() {
 
 
     return (
-        <>
+        <userInfoContext.Provider value={{ workHistories, setWorkHistories, staffFullInfo, setStaffFullInfo }}>
             <ArrowHeader text="Thông tin nhân viên" />
             {loading ? <Typography variant="h5" gutterBottom>
                 Đang lấy dữ liệu nhân viên
@@ -90,13 +105,13 @@ function UserInformation() {
                                     </ListItem>
                                 ))}
                             </List>
-                            {InfoContent(selectedOption, workHistories)}
+                            {InfoContent(selectedOption)}
                         </Box>
                     </Paper>
                 </Box>
             )}
 
-        </>
+        </userInfoContext.Provider>
     );
 }
 

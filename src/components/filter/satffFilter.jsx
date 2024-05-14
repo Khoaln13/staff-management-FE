@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
@@ -8,16 +8,16 @@ import IconButton from '@mui/material/IconButton';
 import FilterAltSharpIcon from '@mui/icons-material/FilterAltSharp';
 import FilterAltOffSharpIcon from '@mui/icons-material/FilterAltOffSharp';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import { useSelector } from 'react-redux';
 
 
-import { fetchDepartmentsAPI } from '../../api';
 
 function StaffFilter({ onFilter }) {
     const [name, setName] = useState('');
     const [department, setDepartment] = useState('');
-    const [departments, setDepartments] = useState([]);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const departments = useSelector((state) => state.company.departments.departments);
     const handleFilterNameChange = (event) => {
         setName(event.target.value);
     };
@@ -30,15 +30,7 @@ function StaffFilter({ onFilter }) {
         onFilter(name, department);
     };
 
-    useEffect(() => {
-        fetchDepartmentsAPI()
-            .then((response) => {
-                setDepartments(response);
-            })
-            .catch((error) => {
-                console.error("Error fetching departments: ", error);
-            });
-    }, []);
+
 
     return (
         <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "20px", paddingRight: "20px", height: "60px" }}>

@@ -28,7 +28,7 @@ function ResponsiveAppBar() {
     const accessToken = currentUser?.accessToken;
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    let axiosJWT = createAxios(currentUser, dispatch, logoutSuccess)
+    let axiosJWT = createAxios(currentUser, dispatch, logoutSuccess);
     const handleLogout = () => {
         logOut(dispatch, userId, navigate, accessToken, axiosJWT)
     }
@@ -49,10 +49,11 @@ function ResponsiveAppBar() {
     };
 
 
-    const staffPage = userId ? { name: 'Thông tin nhân viên ', path: `/staff/${userId}` } : null;
+    const staffPage = userId ? { name: 'Thông tin cá nhân ', path: `/staff/${userId}` } : null;
+    const allStaffsPage = currentUser.user.role_id.name === 'admin' ? { name: 'Nhân viên', path: '/staffs' } : null
     const pages = [
         { name: 'Trang chủ', path: '/' },
-        { name: 'Nhân viên', path: '/staffs' },
+        allStaffsPage,
         staffPage,
     ].filter(page => page !== null);
 

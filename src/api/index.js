@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_ROOT } from "../util/constants";
-import { format } from 'date-fns';
+import { parse, format } from 'date-fns';
+
 
 export const fetchStaffsPaginationAPI = async (page, limit, accessToken, axiosJWT) => {
 
@@ -43,8 +44,27 @@ export const fetchDepartmentsAPI = async () => {
     return response.data;
 };
 
-export const fetchStaffInfoAPI = async (staffId, accessToken) => {
-    const response = await axios.get(`${API_ROOT}/staffs/${staffId}`, {
+export const fetchStaffInfoAPI = async (staffId, accessToken, axiosJWT) => {
+    const response = await axiosJWT.get(`${API_ROOT}/staffs/${staffId}`, {
+        withCredentials: true,
+        headers: {
+            token: `Bearer ${accessToken}`
+        }
+    }
+    );
+    const staff = response.data;
+
+    // Xử lý ngày thành chuỗi "dd/mm/yyyy"
+    const formattedData = {
+        ...staff,
+        dateOfBirth: format(new Date(staff.dateOfBirth), 'dd/MM/yyyy')
+    }
+
+    return formattedData;
+};
+//get staff with full ìnomation
+export const fetchStaffFullInfoAPI = async (staffId, accessToken, axiosJWT) => {
+    const response = await axiosJWT.get(`${API_ROOT}/staffs/info/${staffId}`, {
         withCredentials: true,
         headers: {
             token: `Bearer ${accessToken}`
@@ -77,11 +97,34 @@ export const fetchWorkHistoryByEmployeeId = async (staffId) => {
     return formattedWorkHistory;
 
 }
+export const updateStaff = async (editedStaffInfo, staffId, accessToken, axiosJWT) => {
+    // Loại bỏ các trường không cần thiết và chỉ giữ lại giá trị _id
+    const updatedStaffInfo = {
+        ...editedStaffInfo,
+        department_id: editedStaffInfo.department_id._id,
+        position_id: editedStaffInfo.position_id._id,
+        account_id: editedStaffInfo.account_id._id,
+        role_id: editedStaffInfo.role_id._id
+    };
+    delete updatedStaffInfo._id;
+    // Chuyển đổi trường dateOfBirth từ chuỗi sang kiểu Date
+    updatedStaffInfo.dateOfBirth = parse(editedStaffInfo.dateOfBirth, 'dd/MM/yyyy', new Date());
+
+    const response = await axiosJWT.put(`${API_ROOT}/staffs/${staffId}`, { updatedStaffInfo }, {
+        withCredentials: true,
+        headers: {
+            token: `Bearer ${accessToken}`
+        },
+    })
+
+    return response.data;
+};
 
 export const refreshToken = async () => {
     try {
         const res = await axios.post(`${API_ROOT}/auth/refresh`, {}, {
             withCredentials: true,
+
         });
 
         return res.data

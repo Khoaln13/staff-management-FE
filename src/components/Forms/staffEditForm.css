@@ -1,0 +1,15 @@
+.custom-datepicker {
+    height: 45px;
+    font-size: 15px;
+    padding-left: 15px;
+    border-color: rgba(187, 177, 177, 0.3);
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.custom-datepicker:focus {
+    border-color: #3f51b5;
+    box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+    outline: none;
+}
