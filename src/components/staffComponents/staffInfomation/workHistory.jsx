@@ -1,11 +1,13 @@
+import { useContext } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-
+import { userInfoContext } from './staffInfo';
 
 function WorkHistoryCard({ workHistory }) {
+
     return (
         <Card sx={{
             margin: "15px", border: "1px solid",
@@ -29,7 +31,9 @@ function WorkHistoryCard({ workHistory }) {
     );
 }
 
-function WorkHistory({ workHistories }) {
+function WorkHistory() {
+    const useUserInfo = useContext(userInfoContext);
+    const workHistories = useUserInfo.workHistories;
     return (
         <Box
             sx={{

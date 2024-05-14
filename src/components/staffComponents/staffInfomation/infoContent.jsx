@@ -1,14 +1,17 @@
 
 import WorkHistory from "./workHistory";
 import StaffDetailProfile from "./staffDetailProfile";
-function InfoContent(selectedOption, workHistories) {
+
+
+
+function InfoContent(selectedOption) {
 
 
     switch (selectedOption) {
         case 'work_history':
 
             return (
-                <WorkHistory workHistories={workHistories} />
+                <WorkHistory />
             );
         case 'salary':
             return (
