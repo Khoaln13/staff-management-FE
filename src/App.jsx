@@ -7,6 +7,7 @@ import LoginForm from './components/Forms/loginForm'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import Home from './components/home/Home'
+import AdminHolidayList from './components/requestSolution/AdminHolidayList'
 
 function App() {
   const user = useSelector((state) => state.auth.login.currentUser)
@@ -23,7 +24,7 @@ function App() {
           <>
             <Route path="/staffs" element={<StaffList />} />
             <Route path="/staff/:id" element={<StaffInfo />} />
-
+            <Route path="/solve-request" element={<AdminHolidayList />} />
             <Route path="/" element={<Home />} />
           </>
         ) : (
