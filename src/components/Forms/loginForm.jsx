@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { createAxios } from '../../redux/createInstance';
 import { logOut } from '../../redux/apiRequest';
 import { logoutSuccess } from '../../redux/authSlice';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 // import { Link } from 'react-router-dom';
 function LoginForm() {
     const [username, setUsername] = useState('');
@@ -34,28 +36,56 @@ function LoginForm() {
     };
 
     return (
-        <form onSubmit={handleLogin}>
-            <TextField
-                label="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <TextField
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-
-            <Button variant="contained" type="submit">Login</Button>
-            {/* <Typography variant="body2">
-                Chưa có tài khoản?{' '}
-                <Link to="/register">
-                    Đăng ký
-                </Link>
-            </Typography> */}
-        </form>
-
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100vh',
+                backgroundColor: '#f5f5f5',
+                padding: 2,
+            }}
+        >
+            <Box
+                component="form"
+                onSubmit={handleLogin}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    padding: 4,
+                    borderRadius: 2,
+                    boxShadow: 3,
+                }}
+            >
+                <Typography variant="h4" sx={{ marginBottom: 2 }}>
+                    Đăng nhập
+                </Typography>
+                {/* {error && (
+                    <Alert severity="error" sx={{ marginBottom: 2 }}>
+                        {error}
+                    </Alert>
+                )} */}
+                <TextField
+                    label="Tên đăng nhập"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    sx={{ marginBottom: 2, width: '300px' }}
+                />
+                <TextField
+                    label="Mật khẩu"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    sx={{ marginBottom: 2, width: '300px' }}
+                />
+                <Button variant="contained" type="submit" sx={{ width: '300px' }}>
+                    Đăng nhập
+                </Button>
+            </Box>
+        </Box>
     );
 }
 

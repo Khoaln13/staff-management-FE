@@ -1,13 +1,19 @@
 
 import WorkHistory from "./workHistory";
-import StaffDetailProfile from "./staffDetailProfile";
-
+import StaffEdit from "./staffEdit";
+import TimesheetList from "./timesheet";
+import HolidayList from "./HolidayList";
 
 
 function InfoContent(selectedOption) {
 
 
     switch (selectedOption) {
+        case 'timesheet':
+
+            return (
+                <TimesheetList />
+            );
         case 'work_history':
 
             return (
@@ -17,11 +23,16 @@ function InfoContent(selectedOption) {
             return (
                 <p>salary</p>
             );
+        case 'holiday':
+            return (
+                <HolidayList />
+            );
         case 'edit_profile':
             return (
-                <StaffDetailProfile />
+                <StaffEdit />
 
             );
+
         default:
             return null;
     }
