@@ -76,13 +76,13 @@ const PositionEditForm = () => {
                 .then((response) => {
                     useUserInfo.setStaffInfo(response);
                 }).catch((error) => {
-                    console.error('Error fetching timesheets : ', error);
+                    console.error('Error fetching staffInfo : ', error);
                 });
             await fetchStaffFullInfoAPI(staffInfo._id, user.accessToken, axiosJWT)
                 .then((response) => {
                     useUserInfo.setStaffFullInfo(response);
                 }).catch((error) => {
-                    console.error('Error fetching timesheets : ', error);
+                    console.error('Error fetching staffFullInfo : ', error);
                 });
             await fetchWorkHistoryByEmployeeId(staffInfo._id)
                 .then((response) => {

@@ -21,7 +21,6 @@ import Typography from '@mui/material/Typography';
 import { createAxios } from '../../../redux/createInstance';
 import { loginSuccess } from '../../../redux/authSlice';
 
-
 const options = [
     { value: 'timesheet', label: 'Chấm công', icon: <EditCalendarIcon /> },
     { value: 'salary', label: 'Bảng lương', icon: <AttachMoneyIcon /> },
@@ -40,7 +39,6 @@ function UserInformation() {
     const [workHistories, setWorkHistories] = useState([]);
     const [timesheets, setTimesheets] = useState([]);
     const [holidays, setHolidays] = useState([]);
-
     const [loading, setLoading] = useState(true);
     const user = useSelector((state) => state.auth.login.currentUser);
     const dispatch = useDispatch();
@@ -75,7 +73,7 @@ function UserInformation() {
             .then((response) => {
                 setTimesheets(response);
             }).catch((error) => {
-                console.error('Error fetching timesheets : ', error);
+                console.error('Error fetching timesheets: ', error);
             });
 
         getHolidaysByEmployeeId(id, user.accessToken, axiosJWT)
@@ -91,50 +89,63 @@ function UserInformation() {
         setSelectedOption(event.target.value);
     };
 
-
-
-
     return (
-        <userInfoContext.Provider value={{ workHistories, setWorkHistories, staffFullInfo, setStaffFullInfo, timesheets, setTimesheets, holidays, setHolidays }}>
+        <userInfoContext.Provider value={{ workHistories, setWorkHistories, staffFullInfo, setStaffFullInfo, timesheets, setTimesheets, holidays, setHolidays, staffInfo, setStaffInfo }}>
             <ArrowHeader text="Thông tin nhân viên" />
             {loading ? (
                 <Typography variant="h5" gutterBottom>
                     Đang lấy dữ liệu nhân viên
                 </Typography>
             ) : (
-                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4, marginBottom: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4, marginBottom: 4, overflowY: 'auto', paddingRight: '17px' }}>
                     <Paper sx={{ width: '90%', display: 'flex', flexDirection: { xs: 'column', md: 'row' }, border: "1px solid" }}>
                         {/* Left section */}
                         <Profile staffInfo={staffInfo} />
                         <Divider orientation="vertical" variant="middle" flexItem light={true} />
                         {/* Right section */}
-                        <Box sx={{ px: 4, width: "70%", paddingTop: 4 }}>
+                        <Box sx={{ paddingLeft: 4, width: "70%", paddingTop: 4, paddingRight: 4 }}>
+
+
+
+
                             <Select
+
                                 value={selectedOption}
                                 onChange={handleChange}
                                 renderValue={(selected) => {
                                     const selectedOption = options.find(option => option.value === selected);
                                     return (
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <ListItemIcon sx={{ minWidth: 'unset', marginRight: 1 }}>{selectedOption.icon}</ListItemIcon>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', padding: 0, margin: 0 }}>
+                                            <ListItemIcon sx={{ marginRight: 1 }}>{selectedOption.icon}</ListItemIcon>
                                             <ListItemText primary={selectedOption.label} />
                                         </Box>
                                     );
                                 }}
-                                sx={{ width: 250 }}
+                                sx={{
+                                    width: 250,
+                                    maxWidth: 250,
+                                    padding: 0,
+                                    '& .MuiSelect-select': {
+                                        padding: '8px 14px'
+                                    }
+                                }}
                             >
                                 {options.map((option) => (
                                     <MenuItem
                                         key={option.value}
                                         value={option.value}
-                                        sx={{ display: 'flex', alignItems: 'center', marginLeft: "4px", borderRadius: "4px" }}
+                                        sx={{ display: 'flex', alignItems: 'center', borderRadius: "4px", width: 250 }}
                                     >
                                         <ListItemIcon sx={{ minWidth: 'unset', marginRight: 1 }}>{option.icon}</ListItemIcon>
                                         <ListItemText primary={option.label} />
                                     </MenuItem>
                                 ))}
                             </Select>
+
+
                             {InfoContent(selectedOption)}
+
+
                         </Box>
                     </Paper>
                 </Box>

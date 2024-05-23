@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import FormControl from '@mui/material/FormControl';
-import { updateStaff } from '../../api';
+import { updateStaff, fetchStaffFullInfoAPI, fetchStaffInfoAPI } from '../../api';
 import { createAxios } from '../../redux/createInstance';
 import { loginSuccess } from '../../redux/authSlice';
 import { userInfoContext } from '../staffComponents/staffInfomation/staffInfo';
@@ -50,16 +50,24 @@ const StaffEditForm = () => {
     };
 
 
-
-
-
-
     const handleSubmitInfo = async (event) => {
         event.preventDefault();
         try {
-            const response = await updateStaff(editedStaffInfo, editedStaffInfo._id, user.accessToken, axiosJWT);
+            await updateStaff(editedStaffInfo, editedStaffInfo._id, user.accessToken, axiosJWT);
             setIsChangeInfo(false)
-            window.location.href = `/staff/${response.updatedStaff._id}`;
+            await fetchStaffFullInfoAPI(staffInfo._id, user.accessToken, axiosJWT)
+                .then((response) => {
+                    useUserInfo.setStaffFullInfo(response);
+                })
+                .catch((error) => {
+                    console.error('Error fetching staff full info: ', error);
+                });
+            await fetchStaffInfoAPI(staffInfo._id, user.accessToken, axiosJWT)
+                .then((response) => {
+                    useUserInfo.setStaffInfo(response);
+                }).catch((error) => {
+                    console.error('Error fetching staffInfo : ', error);
+                });
         } catch (error) {
             console.error("Error updating staff:", error);
         }
@@ -183,7 +191,7 @@ const StaffEditForm = () => {
                 </Button>
             </form>
 
-        </Box>
+        </Box >
     );
 };
 

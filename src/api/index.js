@@ -68,8 +68,7 @@ export const fetchStaffFullInfoAPI = async (staffId, accessToken, axiosJWT) => {
     }
     );
     const staff = response.data;
-
-    // Xử lý ngày thành chuỗi "dd/mm/yyyy"
+    // Xử lý ngày thành chuỗi "dd/mm/yyyy"  
     const formattedData = {
         ...staff,
         dateOfBirth: format(new Date(staff.dateOfBirth), 'dd/MM/yyyy')
@@ -118,7 +117,7 @@ export const updateStaffWork = async (editedStaffWork, staffId, accessToken, axi
 
     return response.data;
 };
-// Position_history API
+// =================================================Position_history API
 export const fetchWorkHistoryByEmployeeId = async (staffId) => {
 
     const response = await axios.get(`${API_ROOT}/position-histories/${staffId}`);
@@ -134,12 +133,12 @@ export const fetchWorkHistoryByEmployeeId = async (staffId) => {
     return formattedWorkHistory;
 
 }
-//Department API
+// ===========================================================Department API
 export const fetchDepartmentsAPI = async () => {
     const response = await axios.get(`${API_ROOT}/departments`)
     return response.data;
 };
-//Timesheet API
+// ==========================================================Timesheet API
 export const fetchTimesheetByEmployeeId = async (staffId, accessToken, axiosJWT) => {
 
 
@@ -180,13 +179,14 @@ export const updateTimesheet = async (editedTimesheet, timesheetId, accessToken,
     return response.data;
 };
 
-//holidays API
+//=================================================================holidays API
 
 export const createHoliday = async (employeeId, holiday, accessToken, axiosJWT) => {
     const response = await axiosJWT.post(`${API_ROOT}/holidays/${employeeId}`, holiday, {
         withCredentials: true,
         headers: { token: `Bearer ${accessToken}` }
     });
+
     return response.data;
 };
 
@@ -205,13 +205,34 @@ export const getHolidaysRequest = async (accessToken, axiosJWT) => {
     });
     return response.data;
 };
-
 export const updateHolidayStatus = async (holidayId, status, accessToken, axiosJWT) => {
     const response = await axiosJWT.put(`${API_ROOT}/holidays/${holidayId}/status`, { status }, {
         withCredentials: true,
         headers: { token: `Bearer ${accessToken}` }
     });
     return response.data;
+};
+export const updateHolidayInfo = async (holidayId, statusInfo, accessToken, axiosJWT) => {
+    const response = await axiosJWT.put(`${API_ROOT}/holidays/${holidayId}/update`, statusInfo, {
+        withCredentials: true,
+        headers: { token: `Bearer ${accessToken}` }
+    });
+    return response.data;
+};
+
+export const deleteHoliday = async (holidayId, accesstoken, axiosJWT) => {
+    try {
+        const response = await axiosJWT.delete(`${API_ROOT}/holidays/${holidayId}`, {
+            withCredentials: true,
+            headers: {
+                token: `Bearer ${accesstoken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting holiday:', error);
+        throw error;
+    }
 };
 
 

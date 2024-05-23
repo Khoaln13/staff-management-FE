@@ -64,6 +64,7 @@ function WorkHistory() {
                 alignItems: 'center',
                 marginTop: 2,
                 marginBottom: 8,
+
             }}
         >
             <Paper
