@@ -51,7 +51,7 @@ function ResponsiveAppBar() {
 
     const staffPage = userId ? { name: 'Thông tin cá nhân ', path: `/staff/${userId}` } : null;
     const allStaffsPage = currentUser.user.role_id.name === 'admin' ? { name: 'Nhân viên', path: '/staffs' } : null
-    const requestSolve = currentUser.user.role_id.name === 'admin' ? { name: 'Xử lý yêu cầu', path: '/solve-request' } : null
+    const requestSolve = currentUser.user.role_id.name === 'admin' ? { name: 'Tác vụ', path: '/solve-request' } : null
     const pages = [
         { name: 'Trang chủ', path: '/' },
         allStaffsPage,

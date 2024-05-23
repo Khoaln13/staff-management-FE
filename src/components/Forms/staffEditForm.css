@@ -6,10 +6,36 @@
     border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
+   
 }
 
 .custom-datepicker:focus {
     border-color: #3f51b5;
     box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
     outline: none;
+}
+
+/* customDatePicker.css */
+.react-datepicker-popper {
+    z-index: 1500; /* Chỉnh z-index để đảm bảo popup nằm trên các thành phần khác */
+}
+
+.react-datepicker {
+    background-color: white;
+    border: 1px solid #ced4da;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.react-datepicker__header {
+    background-color: white;
+    border-bottom: 1px solid #eceeef;
+}
+
+.react-datepicker__day {
+    color: #000;
+}
+
+.react-datepicker__day--selected {
+    background-color: #1976d2;
+    color: white;
 }
