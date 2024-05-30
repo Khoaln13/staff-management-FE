@@ -92,14 +92,14 @@ function WorkHistory() {
                     <Divider sx={{ my: 1 }}></Divider>
                     <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
                         <GroupsIcon sx={{ marginRight: 2, width: "20px", height: "20px", color: "#5298fa" }} />
-                        <Typography variant="h7">Phòng {currentWork.department_id?.name}</Typography>
+                        <Typography variant="h7">Phòng {currentWork?.department_id?.name}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
                         <WorkIcon sx={{ marginRight: 2, width: "20px", height: "20px", color: "#5298fa" }} />
-                        <Typography variant="h7"> {currentWork.position_id?.title}</Typography>
+                        <Typography variant="h7"> {currentWork?.position_id?.title}</Typography>
                     </Box>
                     <Typography variant="body2" color="text.secondary">
-                        Ngày bắt đầu: {currentWork.start_date}
+                        Ngày bắt đầu: {currentWork?.start_date}
                     </Typography>
                     {isAdmin && (
                         <Button
