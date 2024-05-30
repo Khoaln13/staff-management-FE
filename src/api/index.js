@@ -2,7 +2,34 @@ import axios from "axios";
 import { API_ROOT } from "../util/constants";
 import { parse, format } from 'date-fns';
 
-//staff API
+//===================================================account API => auth
+export const createAccount = async (newAccount, accessToken, axiosJWT) => {
+
+    const response = await axiosJWT.post(`${API_ROOT}/auth/register`, { newAccount }, {
+        withCredentials: true,
+        headers: {
+            token: `Bearer ${accessToken}`
+        },
+    })
+
+    return response.data;
+};
+//==================================================staff API
+export const createStaff = async (newAccount, newStaff, newPositionHistory, accessToken, axiosJWT) => {
+
+    // Chuyển đổi trường dateOfBirth từ chuỗi sang kiểu Date
+    newStaff.dateOfBirth = parse(newStaff.dateOfBirth, 'dd/MM/yyyy', new Date());
+
+    const response = await axiosJWT.post(`${API_ROOT}/staffs/create`, { newAccount, newStaff, newPositionHistory }, {
+        withCredentials: true,
+        headers: {
+            token: `Bearer ${accessToken}`
+        },
+    })
+
+    return response.data;
+};
+
 export const fetchStaffsPaginationAPI = async (page, limit, accessToken, axiosJWT) => {
 
     const response = await axiosJWT.get(`${API_ROOT}/staffs`, {
