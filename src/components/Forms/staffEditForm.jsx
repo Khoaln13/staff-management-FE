@@ -82,8 +82,9 @@ const StaffEditForm = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                justifyContent: 'center',
                 marginTop: 0,
-                marginBottom: 2,
+
             }}
         >
             <Typography variant="h5" component="h2" sx={{ my: "20px", fontWeight: "bold" }}>
@@ -106,14 +107,14 @@ const StaffEditForm = () => {
                     name="name"
                     value={editedStaffInfo.name}
                     onChange={handleChangeInfo}
-                    sx={{ width: "400px", }}
+                    sx={{ width: "60%", }}
                     margin="normal"
                     size='small'
                     disabled={!isAdmin}
                 />
 
 
-                <div style={{ width: "400px" }}>
+                <div style={{ width: "60%" }}>
                     <label style={{ marginBottom: "-15px", marginLeft: "15px", display: 'block', color: isAdmin ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.38)', fontSize: '12px' }}>Ngày sinh</label>
                     <DatePicker
                         selected={parse(editedStaffInfo.dateOfBirth, 'dd/MM/yyyy', new Date())}
@@ -139,7 +140,7 @@ const StaffEditForm = () => {
                     />
 
                 </div>
-                <FormControl component="fieldset" disabled={!isAdmin} sx={{ marginLeft: "-250px" }}>
+                <FormControl component="fieldset" disabled={!isAdmin} sx={{}}>
                     <label style={{ marginBottom: "-5px", marginTop: "5px", marginLeft: "15px", display: 'block', color: isAdmin ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.38)', fontSize: '12px' }}>Giới tính</label>
                     <RadioGroup
                         row
@@ -157,7 +158,7 @@ const StaffEditForm = () => {
                     name="address"
                     value={editedStaffInfo.address}
                     onChange={handleChangeInfo}
-                    sx={{ width: "400px" }}
+                    sx={{ width: "60%" }}
                     margin="normal"
                     size='small'
                 />
@@ -166,7 +167,7 @@ const StaffEditForm = () => {
                     name="email"
                     value={editedStaffInfo.email}
                     onChange={handleChangeInfo}
-                    sx={{ width: "400px" }}
+                    sx={{ width: "60%" }}
                     margin="normal"
                     size='small'
                 />
@@ -175,7 +176,7 @@ const StaffEditForm = () => {
                     name="phone"
                     value={editedStaffInfo.phone}
                     onChange={handleChangeInfo}
-                    sx={{ width: "400px" }}
+                    sx={{ width: "60%" }}
                     margin="normal"
                     size='small'
                 />

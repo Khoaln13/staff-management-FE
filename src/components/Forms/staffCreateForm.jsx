@@ -34,8 +34,9 @@ const StaffCreateForm = () => {
         position: 'id',
         username: '',
         password: '',
+        basicSalary: 0
     });
-
+    const [basicSalary, setBasicSalary] = useState(0)
     const [confirmPassword, setConfirmPassword] = useState('');
     const [validationError, setValidationError] = useState('');
     const [editedStaffWork, setEditedStaffWork] = useState({
@@ -64,6 +65,14 @@ const StaffCreateForm = () => {
         }));
         setIsChangeInfo(true);
     };
+    const handleChangBasicSalary = (event) => {
+        setBasicSalary(event.target.value);
+        setNewStaffInfo((prevState) => ({
+            ...prevState,
+            basicSalary: event.target.value,
+        }));
+        setIsChangeInfo(true);
+    }
 
     const handleConfirmPasswordChange = (event) => {
         setConfirmPassword(event.target.value);
@@ -111,17 +120,22 @@ const StaffCreateForm = () => {
             return;
         }
         setConfirmData(newStaffInfo);
+        console.log(newStaffInfo);
         setIsConfirmOpen(true);
     };
 
     const validateFields = () => {
-        const { username, password, name, email, dateOfBirth, address, phone } = newStaffInfo;
-        if (!username || !password || !name || !email || !dateOfBirth || !address || !phone) {
-            setValidationError('All fields must be filled');
+        const { username, password, name, email, dateOfBirth, address, phone, basicSalary } = newStaffInfo;
+        if (!username || !password || !name || !email || !dateOfBirth || !address || !phone || !basicSalary) {
+            setValidationError('Cần nhập tất cả các thông tin.  Giá trị lương cơ bản phải lớn hơn 0. ');
             return false;
         }
         if (password !== confirmPassword) {
-            setValidationError('Passwords do not match');
+            setValidationError('Mật khẩu không khớp.');
+            return false;
+        }
+        if (username.length < 6 || password.length < 6) {
+            setValidationError('Tài khoản và mật khẩu phải từ 6 kí tự trở lên.');
             return false;
         }
         setValidationError('');
@@ -143,7 +157,7 @@ const StaffCreateForm = () => {
                 ...confirmData,
             };
 
-            await createStaff(accountData, staffData, editedStaffWork, user.accessToken, axiosJWT);
+            await createStaff(accountData, staffData, editedStaffWork, basicSalary, user.accessToken, axiosJWT);
 
             setIsChangeInfo(false);
             setIsConfirmOpen(false);
@@ -319,6 +333,17 @@ const StaffCreateForm = () => {
                             ))}
                         </Select>
                     </FormControl>
+                </Box>
+                <Box>
+                    <TextField
+                        label="Lương cơ bản"
+                        name="basicSalary"
+                        value={newStaffInfo.basicSalary}
+                        onChange={handleChangBasicSalary}
+                        sx={{ width: "400px", }}
+                        margin="normal"
+                        size='small'
+                    />
                 </Box>
 
                 <Button

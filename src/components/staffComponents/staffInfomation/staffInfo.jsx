@@ -13,10 +13,10 @@ import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchStaffInfoAPI, fetchWorkHistoryByEmployeeId, fetchStaffFullInfoAPI, fetchTimesheetByEmployeeId, getHolidaysByEmployeeId } from '../../../api';
+import { fetchStaffInfoAPI, fetchWorkHistoryByEmployeeId, fetchStaffFullInfoAPI, fetchTimesheetByEmployeeId, getHolidaysByEmployeeId, getPayrollsByEmployeeId } from '../../../api';
 import InfoContent from './infoContent';
 import ArrowHeader from '../../appBar/arrowHeader';
-import Profile from '../profile';
+import Profile from './profile';
 import Typography from '@mui/material/Typography';
 import { createAxios } from '../../../redux/createInstance';
 import { loginSuccess } from '../../../redux/authSlice';
@@ -39,6 +39,7 @@ function UserInformation() {
     const [workHistories, setWorkHistories] = useState([]);
     const [timesheets, setTimesheets] = useState([]);
     const [holidays, setHolidays] = useState([]);
+    const [payrolls, setPayrolls] = useState([]);
     const [loading, setLoading] = useState(true);
     const user = useSelector((state) => state.auth.login.currentUser);
     const dispatch = useDispatch();
@@ -83,6 +84,13 @@ function UserInformation() {
             .catch((error) => {
                 console.error('Error fetching holidays: ', error);
             });
+        getPayrollsByEmployeeId(id, user.accessToken, axiosJWT)
+            .then((response) => {
+                setPayrolls(response);
+            })
+            .catch((error) => {
+                console.error('Error fetching payrolls of staff: ', error);
+            });
     }, [id]);
 
     const handleChange = (event) => {
@@ -90,7 +98,7 @@ function UserInformation() {
     };
 
     return (
-        <userInfoContext.Provider value={{ workHistories, setWorkHistories, staffFullInfo, setStaffFullInfo, timesheets, setTimesheets, holidays, setHolidays, staffInfo, setStaffInfo }}>
+        <userInfoContext.Provider value={{ workHistories, setWorkHistories, staffFullInfo, setStaffFullInfo, timesheets, setTimesheets, holidays, setHolidays, staffInfo, setStaffInfo, payrolls }}>
             <ArrowHeader text="Thông tin nhân viên" />
             {loading ? (
                 <Typography variant="h5" gutterBottom>
@@ -98,12 +106,12 @@ function UserInformation() {
                 </Typography>
             ) : (
                 <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4, marginBottom: 4, overflowY: 'auto', paddingRight: '17px' }}>
-                    <Paper sx={{ width: '90%', display: 'flex', flexDirection: { xs: 'column', md: 'row' }, border: "1px solid" }}>
+                    <Paper sx={{ minWidth: '90%', display: 'flex', flexDirection: { xs: 'column', md: 'row' }, border: "1px solid" }}>
                         {/* Left section */}
                         <Profile staffInfo={staffInfo} />
                         <Divider orientation="vertical" variant="middle" flexItem light={true} />
                         {/* Right section */}
-                        <Box sx={{ paddingLeft: 4, width: "70%", paddingTop: 4, paddingRight: 4 }}>
+                        <Box sx={{ p: 4, width: { xs: '100%', md: '70%' } }}>
 
 
 

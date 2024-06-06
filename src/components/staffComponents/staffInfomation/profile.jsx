@@ -20,7 +20,7 @@ const Profile = ({ staffInfo }) => {
                 alignItems: 'center',
                 marginTop: 4,
                 marginBottom: 2,
-                width: '40%',
+                minWidth: '40%',
             }}
         >
 
@@ -28,7 +28,7 @@ const Profile = ({ staffInfo }) => {
                 elevation={3}
                 sx={{
                     paddingBottom: 4,
-                    maxWidth: 400,
+
                     width: '90%',
                     display: 'flex',
                     flexDirection: 'column',
@@ -45,7 +45,7 @@ const Profile = ({ staffInfo }) => {
                     {staffInfo?.name}
                 </Typography>
 
-                <Box sx={{ width: 330, marginTop: 2 }}>
+                <Box sx={{ width: '75%', marginTop: 2 }}>
                     <Paper sx={{
                         padding: 2,
                         marginBottom: 2,
@@ -74,7 +74,7 @@ const Profile = ({ staffInfo }) => {
                     }}>
                         <Typography variant="subtitle2" sx={{ marginBottom: 1 }}>Thông tin liên hệ</Typography>
                         <Divider sx={{ marginBottom: 2 }} />
-                        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '15px', }}>
                             <EmailIcon sx={{ marginRight: 2, width: "20px", height: "20px", color: "#5298fa" }} />
                             <Typography variant="h7"> {staffInfo.email}</Typography>
                         </Box>

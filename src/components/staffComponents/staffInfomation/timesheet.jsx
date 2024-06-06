@@ -22,7 +22,7 @@ import { groupBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../redux/createInstance';
 import { loginSuccess } from '../../../redux/authSlice';
-import { createTimesheets, updateTimesheet } from '../../../api';
+import { createTimesheets, updateTimesheet, updateTimesheetCheckout } from '../../../api';
 import { useParams } from 'react-router-dom';
 import { fetchTimesheetByEmployeeId } from '../../../api';
 
@@ -31,12 +31,12 @@ const TimesheetList = () => {
     const { id } = useParams();
     const useUserInfo = useContext(userInfoContext);
     const staffId = useUserInfo.staffFullInfo._id;
-    const timesheets = useUserInfo.timesheets
+    const timesheets = useUserInfo.timesheets;
     const [openDialog, setOpenDialog] = useState(false);
     const [isTimesheetChange, setIsTimesheetChange] = useState(false);
     const [currentTimesheet, setCurrentTimesheet] = useState(null);
     const [description, setDescription] = useState('');
-    const [todayTimesheetExists, setTodayTimesheetExists] = useState(false);
+    const [todayTimesheet, setTodayTimesheet] = useState(null);
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
 
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -45,9 +45,9 @@ const TimesheetList = () => {
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
-        setTodayTimesheetExists(timesheets.some(ts => ts.date.split('T')[0] === today));
+        const todayTs = timesheets.find(ts => ts.date.split('T')[0] === today);
+        setTodayTimesheet(todayTs);
     }, [timesheets, today]);
-
 
     const handleOpenDialog = (timesheet = null) => {
         setCurrentTimesheet(timesheet);
@@ -70,6 +70,7 @@ const TimesheetList = () => {
             employee_id: staffId,
             date: date,
             startTime: startTime,
+            endTime: null,
             description: description
         };
 
@@ -91,6 +92,18 @@ const TimesheetList = () => {
         // Reload data or update state to reflect changes
     };
 
+    const handleCheckout = async () => {
+        const now = new Date();
+        const endTime = now.toTimeString().split(' ')[0];
+        await updateTimesheetCheckout(endTime, todayTimesheet._id, user.accessToken, axiosJWT);
+        await fetchTimesheetByEmployeeId(id, user.accessToken, axiosJWT)
+            .then((response) => {
+                useUserInfo.setTimesheets(response);
+            }).catch((error) => {
+                console.error('Error fetching timesheets : ', error);
+            });
+    };
+
     // Group timesheets by month
     const groupedTimesheets = groupBy(timesheets, (timesheet) => {
         const date = new Date(timesheet.date);
@@ -107,20 +120,31 @@ const TimesheetList = () => {
                             sx={{
                                 fontWeight: 'bold',
                                 marginBottom: 1,
-                                color: todayTimesheetExists ? '#3be34f' : '#ff7259'
+                                color: todayTimesheet ? (todayTimesheet.endTime ? '#3be34f' : '#ff7259') : '#ff7259'
                             }}
                         >
-                            {todayTimesheetExists ? 'Bạn đã chấm công hôm nay!' : 'Hôm nay bạn chưa chấm công!'}
+                            {todayTimesheet ? (todayTimesheet.endTime ? 'Bạn đã chấm công hôm nay!' : 'Bạn đã check-in hôm nay, hãy check-out!') : 'Hôm nay bạn chưa chấm công!'}
                         </Typography>
-                        <Fab
-                            color="primary"
-                            aria-label="add"
-                            onClick={() => handleOpenDialog()}
-                            disabled={todayTimesheetExists}
-                            sx={{ marginBottom: 2 }}
-                        >
-                            <AddIcon />
-                        </Fab>
+                        {!todayTimesheet && (
+                            <Fab
+                                color="primary"
+                                aria-label="add"
+                                onClick={() => handleOpenDialog()}
+                                sx={{ marginBottom: 2 }}
+                            >
+                                <AddIcon />
+                            </Fab>
+                        )}
+                        {todayTimesheet && !todayTimesheet.endTime && (
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleCheckout}
+                                sx={{ marginBottom: 2 }}
+                            >
+                                Checkout
+                            </Button>
+                        )}
                     </div>
                 )}
                 {Object.keys(groupedTimesheets).map((month) => (
@@ -147,9 +171,15 @@ const TimesheetList = () => {
                                                     )}
                                                 </div>
                                                 <div style={{ display: 'flex', marginLeft: '-8px' }}>
-                                                    <AccessTimeIcon fontSize="small" sx={{ marginRight: '4px' }} />
-                                                    <Typography variant="subtitle2">
+                                                    <AccessTimeIcon fontSize="small" sx={{ color: "#0496c7", marginRight: '4px' }} />
+                                                    <Typography variant="subtitle2" sx={{ color: "#0496c7" }}>
                                                         {timesheet.startTime}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ display: 'flex', marginLeft: '-8px' }}>
+                                                    <AccessTimeIcon fontSize="small" sx={{ color: '#9604c7', marginRight: '4px' }} />
+                                                    <Typography variant='subtitle2' sx={{ color: '#9604c7', }}>
+                                                        {timesheet.endTime ? timesheet.endTime : '-----'}
                                                     </Typography>
                                                 </div>
 
