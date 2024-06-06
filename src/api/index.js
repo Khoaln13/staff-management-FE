@@ -15,12 +15,12 @@ export const createAccount = async (newAccount, accessToken, axiosJWT) => {
     return response.data;
 };
 //==================================================staff API
-export const createStaff = async (newAccount, newStaff, newPositionHistory, accessToken, axiosJWT) => {
+export const createStaff = async (newAccount, newStaff, newPositionHistory, newBasicSalary, accessToken, axiosJWT) => {
 
     // Chuyển đổi trường dateOfBirth từ chuỗi sang kiểu Date
     newStaff.dateOfBirth = parse(newStaff.dateOfBirth, 'dd/MM/yyyy', new Date());
 
-    const response = await axiosJWT.post(`${API_ROOT}/staffs/create`, { newAccount, newStaff, newPositionHistory }, {
+    const response = await axiosJWT.post(`${API_ROOT}/staffs/create`, { newAccount, newStaff, newPositionHistory, newBasicSalary }, {
         withCredentials: true,
         headers: {
             token: `Bearer ${accessToken}`
@@ -32,11 +32,23 @@ export const createStaff = async (newAccount, newStaff, newPositionHistory, acce
 
 export const fetchStaffsPaginationAPI = async (page, limit, accessToken, axiosJWT) => {
 
-    const response = await axiosJWT.get(`${API_ROOT}/staffs`, {
+    const response = await axiosJWT.get(`${API_ROOT}/staffs/paginate`, {
         params: {
             page: page,
             limit: limit
         },
+        withCredentials: true,
+        headers: {
+            token: `Bearer ${accessToken}`
+        }
+    })
+
+    return response.data;
+};
+
+export const fetchStaffsAPI = async (accessToken, axiosJWT) => {
+
+    const response = await axiosJWT.get(`${API_ROOT}/staffs`, {
         withCredentials: true,
         headers: {
             token: `Bearer ${accessToken}`
@@ -206,6 +218,19 @@ export const updateTimesheet = async (editedTimesheet, timesheetId, accessToken,
     return response.data;
 };
 
+export const updateTimesheetCheckout = async (endTime, timesheetId, accessToken, axiosJWT) => {
+
+
+    const response = await axiosJWT.put(`${API_ROOT}/timesheets/checkout/${timesheetId}`, { endTime }, {
+        withCredentials: true,
+        headers: {
+            token: `Bearer ${accessToken}`
+        },
+    })
+
+    return response.data;
+};
+
 //=================================================================holidays API
 
 export const createHoliday = async (employeeId, holiday, accessToken, axiosJWT) => {
@@ -261,9 +286,136 @@ export const deleteHoliday = async (holidayId, accesstoken, axiosJWT) => {
         throw error;
     }
 };
+//============================================salary API
+export const getPayrollsByEmployeeId = async (employeeId, accessToken, axiosJWT) => {
+    const response = await axiosJWT.get(`${API_ROOT}/payrolls/employee/${employeeId}`, {
+        withCredentials: true,
+        headers: { token: `Bearer ${accessToken}` }
+    });
+    return response.data;
+};
+
+export const getPayrollDetailsWithTime = async (employeeId, month, year, accessToken, axiosJWT) => {
+    const response = await axiosJWT.get(`${API_ROOT}/payrolls/time/employee/`, {
+        params: {
+            employee_id: employeeId,
+            month: month,
+            year: year,
+
+        },
+        withCredentials: true,
+        headers: { token: `Bearer ${accessToken}` }
+    });
+    return response.data;
+};
+export const createBonusMultiEmployees = async (employee_ids, data, accessToken, axiosJWT) => {
+    const response = await axiosJWT.post(`${API_ROOT}/bonuses/multi-create`, { employee_ids, data }, {
+        withCredentials: true,
+        headers: { token: `Bearer ${accessToken}` }
+    });
+
+    return response.data;
+};
+export const createDeDuctionMultiEmployees = async (employee_ids, data, accessToken, axiosJWT) => {
+    const response = await axiosJWT.post(`${API_ROOT}/deductions/multi-create`, { employee_ids, data }, {
+        withCredentials: true,
+        headers: { token: `Bearer ${accessToken}` }
+    });
+
+    return response.data;
+};
+export const createAllowanceMultiEmployees = async (employee_ids, data, accessToken, axiosJWT) => {
+    const response = await axiosJWT.post(`${API_ROOT}/allowances/multi-create`, { employee_ids, data }, {
+        withCredentials: true,
+        headers: { token: `Bearer ${accessToken}` }
+    });
+
+    return response.data;
+};
+
+export const updateBonus = async (id, dataBody, accessToken, axiosJWT) => {
 
 
+    const response = await axiosJWT.put(`${API_ROOT}/bonuses/${id}`, { dataBody }, {
+        withCredentials: true,
+        headers: {
+            token: `Bearer ${accessToken}`
+        },
+    })
 
+    return response.data;
+};
+
+export const updateAllowance = async (id, dataBody, accessToken, axiosJWT) => {
+
+
+    const response = await axiosJWT.put(`${API_ROOT}/allowances/${id}`, { dataBody }, {
+        withCredentials: true,
+        headers: {
+            token: `Bearer ${accessToken}`
+        },
+    })
+
+    return response.data;
+};
+export const updateDeduction = async (id, dataBody, accessToken, axiosJWT) => {
+
+
+    const response = await axiosJWT.put(`${API_ROOT}/deductions/${id}`, { dataBody }, {
+        withCredentials: true,
+        headers: {
+            token: `Bearer ${accessToken}`
+        },
+    })
+
+    return response.data;
+};
+
+export const deleteBonus = async (id, accesstoken, axiosJWT) => {
+    try {
+        const response = await axiosJWT.delete(`${API_ROOT}/bonuses/${id}`, {
+            withCredentials: true,
+            headers: {
+                token: `Bearer ${accesstoken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting bonus:', error);
+        throw error;
+    }
+};
+export const deleteAllowance = async (id, accesstoken, axiosJWT) => {
+    try {
+        const response = await axiosJWT.delete(`${API_ROOT}/allowances/${id}`, {
+            withCredentials: true,
+            headers: {
+                token: `Bearer ${accesstoken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting allowance:', error);
+        throw error;
+    }
+};
+
+export const deleteDeduction = async (id, accesstoken, axiosJWT) => {
+    try {
+        const response = await axiosJWT.delete(`${API_ROOT}/deductions/${id}`, {
+            withCredentials: true,
+            headers: {
+                token: `Bearer ${accesstoken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting deduction:', error);
+        throw error;
+    }
+};
+
+//========================================================
 export const refreshToken = async () => {
     try {
         const res = await axios.post(`${API_ROOT}/auth/refresh`, {}, {

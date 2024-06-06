@@ -18,7 +18,8 @@ function WorkHistoryCard({ workHistory }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            border: 'none'
+            border: 'none',
+            overflowX: 'auto',
         }}>
             <CardContent sx={{
                 width: 500,
@@ -62,8 +63,8 @@ function WorkHistory() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                justifyContent: 'center',
                 marginTop: 2,
-                marginBottom: 8,
 
             }}
         >
@@ -75,11 +76,12 @@ function WorkHistory() {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
+                    justifyContent: 'center',
                     marginBottom: 4,
                 }}
             >
                 <Paper sx={{
-                    width: 500,
+                    width: '80%',
                     padding: 2,
                     border: '1px solid rgba(0, 0, 0, 0.2)',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
@@ -124,8 +126,8 @@ function WorkHistory() {
                 </Paper>
                 <Typography variant='subtitle2' sx={{ alignSelf: "left", marginTop: 2 }}>Lịch sử công việc</Typography>
                 <Box sx={{
-                    maxHeight: 400, // Adjust the height as needed
-                    overflowY: 'auto',
+                    // maxHeight: 400, // Adjust the height as needed
+
                     width: '100%',
                 }}>
                     {passedWorks.map((history, index) => (

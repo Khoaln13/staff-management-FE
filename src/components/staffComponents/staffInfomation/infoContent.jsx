@@ -3,6 +3,7 @@ import WorkHistory from "./workHistory";
 import StaffEdit from "./staffEdit";
 import TimesheetList from "./timesheet";
 import HolidayList from "./HolidayList";
+import StaffTableSalary from "./Salary/staffTableSalary";
 
 
 function InfoContent(selectedOption) {
@@ -21,7 +22,7 @@ function InfoContent(selectedOption) {
             );
         case 'salary':
             return (
-                <p>salary</p>
+                <StaffTableSalary />
             );
         case 'holiday':
             return (

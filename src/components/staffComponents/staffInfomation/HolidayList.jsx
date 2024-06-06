@@ -171,8 +171,8 @@ const HolidayList = () => {
             </Box>
             <Grid container spacing={2}
                 sx={{
-                    maxHeight: 500,
-                    overflowY: 'auto',
+                    // maxHeight: 500,
+                    // overflowY: 'auto',
                     width: '100%',
                 }}>
                 {holidays.map((holiday) => (
