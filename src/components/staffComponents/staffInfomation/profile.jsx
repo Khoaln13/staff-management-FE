@@ -10,17 +10,21 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CakeIcon from '@mui/icons-material/Cake';
 import WcIcon from '@mui/icons-material/Wc';
 
+
 const Profile = ({ staffInfo }) => {
 
     return (
+
         <Box
             sx={{
+                position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                marginTop: 4,
+                // marginTop: 2,
                 marginBottom: 2,
-                minWidth: '40%',
+                width: '90%',
+
             }}
         >
 
@@ -28,24 +32,23 @@ const Profile = ({ staffInfo }) => {
                 elevation={3}
                 sx={{
                     paddingBottom: 4,
-
                     width: '90%',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    marginBottom: 4,
+
                 }}
             >
                 <Avatar
-                    sx={{ width: 120, height: 120, marginY: 2 }}
+                    sx={{ width: 100, height: 100, marginY: 1 }}
                     alt="User Avatar"
                     src="/static/images/avatar.jpg"
                 />
-                <Typography variant="h5" sx={{ fontWeight: "bold", alignSelf: "center" }} gutterBottom>
+                <Typography variant="h6" sx={{ fontWeight: "bold", alignSelf: "center" }} gutterBottom>
                     {staffInfo?.name}
                 </Typography>
 
-                <Box sx={{ width: '75%', marginTop: 2 }}>
+                <Box sx={{ width: '75%', marginTop: 1 }}>
                     <Paper sx={{
                         padding: 2,
                         marginBottom: 2,

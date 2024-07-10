@@ -1,3 +1,5 @@
 body {
-    overflow-y: scroll; /* Luôn hiển thị thanh cuộn dọc */
+  padding-right: 0 !important;
+  overflow: visible !important;
+  overflow-y: scroll !important;
   }

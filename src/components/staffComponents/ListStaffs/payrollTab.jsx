@@ -12,6 +12,9 @@ import TableRow from '@mui/material/TableRow';
 export default function PayrollTab(props) {
 
     const { row } = props;
+    const today = new Date();
+    const month = today.getMonth() === 0 ? 12 : today.getMonth() // Tháng trước
+    const year = today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear();
     return (
         <Box sx={{ marginTop: '4px', textAlign: 'center' }}>
             {row.payroll ?
@@ -44,7 +47,7 @@ export default function PayrollTab(props) {
 
                 </Table>
                 :
-                <Typography variant='subtitle2' sx={{ backgroundColor: '#d7dadb' }}>Chưa có bảng lương tháng này</Typography>
+                <Typography variant='subtitle2' sx={{ backgroundColor: '#d7dadb' }}>Bảng lương tháng {month}-{year} </Typography>
             }
         </Box>
     )

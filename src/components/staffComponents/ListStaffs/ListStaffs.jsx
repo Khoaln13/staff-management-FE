@@ -21,7 +21,7 @@ import { createAxios } from '../../../redux/createInstance';
 import { useDispatch, useSelector } from 'react-redux';
 import Pagination from '../../pagination/paginationAction';
 import Row from './ItemStaff';
-import SalaryCreateOptions from './salaryCreateDialog';
+import SalaryCreateOptions from './salaryCreateOptions';
 
 export default function ListStaff() {
     const [selected, setSelected] = useState([]);
@@ -179,11 +179,11 @@ export default function ListStaff() {
                                         />
                                     </TableCell>
                                     <TableCell sx={{ width: 10 }} />
-                                    <TableCell sx={{ fontSize: '18px' }}>Họ và tên</TableCell>
-                                    <TableCell sx={{ fontSize: '18px' }}>Email</TableCell>
-                                    <TableCell sx={{ fontSize: '18px' }}>Chức vụ</TableCell>
-                                    <TableCell sx={{ fontSize: '18px' }}>Phòng ban</TableCell>
-                                    <TableCell sx={{ fontSize: '18px' }}></TableCell>
+                                    <TableCell sx={{ fontSize: '18px', width: 400, }}>Họ và tên</TableCell>
+                                    <TableCell sx={{ fontSize: '18px', width: 400, }}>Email</TableCell>
+                                    <TableCell sx={{ fontSize: '18px', width: 400, }}>Chức vụ</TableCell>
+                                    <TableCell sx={{ fontSize: '18px', width: 600, }}>Phòng ban</TableCell>
+                                    <TableCell sx={{ fontSize: '18px', width: 100, }}></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

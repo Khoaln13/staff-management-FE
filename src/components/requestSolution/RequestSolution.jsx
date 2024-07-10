@@ -27,20 +27,37 @@ const functionsList = [
     // Thêm các chức năng khác nếu cần
 ];
 
-function Menu({ setSelectedComponent }) {
+function Menu({ setSelectedComponent, selectedComponent }) {
     return (
         <Drawer
             variant="permanent"
             sx={{
                 width: 240,
                 flexShrink: 0,
-                [`& .MuiDrawer-paper`]: { width: 240, boxSizing: 'border-box', top: '72px' },
+                [`& .MuiDrawer-paper`]: { width: 250, height: 'fit-content', boxSizing: 'border-box', top: '72px', borderRadius: '5px', marginLeft: '10px' },
             }}
         >
             <Box sx={{ overflow: 'auto', mt: 2 }}>
                 <List>
                     {functionsList.map((func, index) => (
-                        <ListItem button key={index} onClick={() => setSelectedComponent(index)}>
+                        <ListItem
+                            button
+                            key={index}
+                            selected={selectedComponent === index}
+                            onClick={() => setSelectedComponent(index)}
+                            sx={{
+                                '&.Mui-selected': {
+                                    backgroundColor: '#1976d2', // Màu nền khi được chọn
+                                    color: 'white', // Màu chữ khi được chọn
+                                    '&:hover': {
+                                        backgroundColor: '#115293', // Màu nền khi hover và được chọn
+                                    },
+                                },
+                                '&:hover': {
+                                    backgroundColor: '#f5f5f5', // Màu nền khi hover
+                                },
+                            }}
+                        >
                             <ListItemText primary={func.name} />
                         </ListItem>
                     ))}
@@ -72,8 +89,11 @@ function RequestSolution() {
 
 
             <Box component="main" sx={{ flexGrow: 1, p: 3, ml: 30, mt: 8 }}>
-                <Menu setSelectedComponent={setSelectedComponent} />
-                <SelectedComponent />
+                <Menu selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent} />
+                <Box sx={{ width: '80%', border: 'none' }}>
+                    <SelectedComponent />
+                </Box>
+
             </Box>
         </AdminTaskContext.Provider>
     );

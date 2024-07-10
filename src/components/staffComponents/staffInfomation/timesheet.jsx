@@ -116,14 +116,14 @@ const TimesheetList = () => {
                 {user.user._id === staffId && (
                     <div>
                         <Typography
-                            variant='h5'
+                            variant='subtitle1'
                             sx={{
                                 fontWeight: 'bold',
                                 marginBottom: 1,
                                 color: todayTimesheet ? (todayTimesheet.endTime ? '#3be34f' : '#ff7259') : '#ff7259'
                             }}
                         >
-                            {todayTimesheet ? (todayTimesheet.endTime ? 'Bạn đã chấm công hôm nay!' : 'Bạn đã check-in hôm nay, hãy check-out!') : 'Hôm nay bạn chưa chấm công!'}
+                            {todayTimesheet ? (todayTimesheet.endTime ? 'Bạn đã chấm công hôm nay!' : 'Bạn đã check-in hôm nay, check-out để kết thúc công việc hôm nay!') : 'Hôm nay bạn chưa chấm công!'}
                         </Typography>
                         {!todayTimesheet && (
                             <Fab
@@ -165,7 +165,7 @@ const TimesheetList = () => {
                                                         {new Date(timesheet.date).toLocaleDateString()}
                                                     </Typography>
                                                     {isEditable && (
-                                                        <IconButton onClick={() => handleOpenDialog(timesheet)} sx={{ width: '25px', height: '25px', marginLeft: '5px', marginTop: '-8px', color: 'orange' }}>
+                                                        <IconButton onClick={() => handleOpenDialog(timesheet)} sx={{ width: '25px', height: '25px', marginTop: '-8px', color: 'orange' }}>
                                                             <EditIcon fontSize="small" />
                                                         </IconButton>
                                                     )}
@@ -203,9 +203,9 @@ const TimesheetList = () => {
                     </Box>
                 ))}
 
-                <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <Dialog open={openDialog} onClose={handleCloseDialog} >
                     <DialogTitle>{currentTimesheet ? 'Chỉnh sửa chấm công' : 'Chấm công hôm nay'}</DialogTitle>
-                    <DialogContent>
+                    <DialogContent sx={{ minWidth: 500, minHeight: 300 }}>
                         {currentTimesheet && (
                             <>
                                 <Typography variant="subtitle2" gutterBottom>
@@ -227,6 +227,8 @@ const TimesheetList = () => {
                                 setDescription(e.target.value);
                                 setIsTimesheetChange(true);
                             }}
+                            multiline
+                            maxRows={16}
                             sx={{ width: 'calc(100% + 32px)', marginX: '-16px', marginBottom: 2 }}
                         />
                     </DialogContent>

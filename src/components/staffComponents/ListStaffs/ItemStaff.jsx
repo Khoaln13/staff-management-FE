@@ -21,6 +21,9 @@ export default function Row(props) {
     const { row, isSelected, onSelect, user, axiosJWT, setStaffs, setRows, setError } = props;
     const [open, setOpen] = useState(false);
     const [selectedTab, setSelectedTab] = useState(0);
+    const today = new Date();
+    const month = today.getMonth() === 0 ? 12 : today.getMonth() // Tháng trước
+    const year = today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear();
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue);
@@ -34,7 +37,7 @@ export default function Row(props) {
                         onChange={() => onSelect(row._id)}
                     />
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ with: 10 }}>
                     <IconButton
                         aria-label="expand row"
                         size="small"
@@ -79,11 +82,10 @@ export default function Row(props) {
                         <Box sx={{ margin: 1 }}>
                             <Tabs value={selectedTab} onChange={handleTabChange}>
                                 <Tooltip title='Chấm công 7 ngày gần đây'><Tab sx={{ fontSize: '12px' }} label="Chấm công" /></Tooltip>
-                                <Tooltip title='Bảng lương tháng này'><Tab sx={{ fontSize: '12px' }} label="Bảng lương" /></Tooltip>
+                                <Tooltip title={`Bảng lương tháng ${month}-${year} `}><Tab sx={{ fontSize: '12px' }} label="Bảng lương" /></Tooltip>
                                 <Tooltip title='Thưởng tháng này'><Tab sx={{ fontSize: '12px' }} label="Bảng thưởng" /></Tooltip>
                                 <Tooltip title='Khấu trừ tháng này'><Tab sx={{ fontSize: '12px' }} label="Bảng khấu trừ" /></Tooltip>
                                 <Tooltip title='Các phụ cấp hiện có'><Tab sx={{ fontSize: '12px' }} label="Phụ cấp" /></Tooltip>
-
 
                             </Tabs>
                             {selectedTab === 0 && (

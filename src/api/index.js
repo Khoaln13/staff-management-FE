@@ -308,6 +308,15 @@ export const getPayrollDetailsWithTime = async (employeeId, month, year, accessT
     });
     return response.data;
 };
+
+export const getAllTypeSalariesForEmployee = async (employeeId, accessToken, axiosJWT) => {
+    const response = await axiosJWT.get(`${API_ROOT}/payrolls/all-salary/${employeeId}`, {
+
+        withCredentials: true,
+        headers: { token: `Bearer ${accessToken}` }
+    });
+    return response.data;
+};
 export const createBonusMultiEmployees = async (employee_ids, data, accessToken, axiosJWT) => {
     const response = await axiosJWT.post(`${API_ROOT}/bonuses/multi-create`, { employee_ids, data }, {
         withCredentials: true,
@@ -414,7 +423,15 @@ export const deleteDeduction = async (id, accesstoken, axiosJWT) => {
         throw error;
     }
 };
+//createPayrollForAllEmployees
+export const createPayrollForAllEmployees = async (month, year, accessToken, axiosJWT) => {
+    const response = await axiosJWT.post(`${API_ROOT}/payrolls/create/all-payrolls`, { month, year }, {
+        withCredentials: true,
+        headers: { token: `Bearer ${accessToken}` }
+    });
 
+    return response.data;
+};
 //========================================================
 export const refreshToken = async () => {
     try {

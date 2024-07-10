@@ -1,7 +1,6 @@
 import { useEffect, useState, createContext } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import Divider from '@mui/material/Divider';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -13,7 +12,11 @@ import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchStaffInfoAPI, fetchWorkHistoryByEmployeeId, fetchStaffFullInfoAPI, fetchTimesheetByEmployeeId, getHolidaysByEmployeeId, getPayrollsByEmployeeId } from '../../../api';
+import {
+    fetchStaffInfoAPI, fetchWorkHistoryByEmployeeId,
+    fetchStaffFullInfoAPI, fetchTimesheetByEmployeeId,
+    getHolidaysByEmployeeId, getPayrollsByEmployeeId, getAllTypeSalariesForEmployee
+} from '../../../api';
 import InfoContent from './infoContent';
 import ArrowHeader from '../../appBar/arrowHeader';
 import Profile from './profile';
@@ -23,7 +26,7 @@ import { loginSuccess } from '../../../redux/authSlice';
 
 const options = [
     { value: 'timesheet', label: 'Chấm công', icon: <EditCalendarIcon /> },
-    { value: 'salary', label: 'Bảng lương', icon: <AttachMoneyIcon /> },
+    { value: 'salary', label: 'Lương', icon: <AttachMoneyIcon /> },
     { value: 'holiday', label: 'Nghỉ phép', icon: <PostAddIcon /> },
     { value: 'work_history', label: 'Công việc', icon: <WorkHistoryIcon /> },
     { value: 'edit_profile', label: 'Chỉnh sửa thông tin ', icon: <EditNoteIcon /> },
@@ -40,6 +43,11 @@ function UserInformation() {
     const [timesheets, setTimesheets] = useState([]);
     const [holidays, setHolidays] = useState([]);
     const [payrolls, setPayrolls] = useState([]);
+    const [basicSalary, setBasicSalary] = useState(0);
+    const [allBonuses, setBonuses] = useState([]);
+    const [allAllowances, setAllowances] = useState([]);
+    const [allDeductions, setDeductions] = useState([]);
+
     const [loading, setLoading] = useState(true);
     const user = useSelector((state) => state.auth.login.currentUser);
     const dispatch = useDispatch();
@@ -91,14 +99,34 @@ function UserInformation() {
             .catch((error) => {
                 console.error('Error fetching payrolls of staff: ', error);
             });
+
+        getAllTypeSalariesForEmployee(id, user.accessToken, axiosJWT)
+            .then((response) => {
+                setBonuses(response.bonuses);
+                setDeductions(response.deductions);
+                setAllowances(response.allowances);
+                setBasicSalary(response.basicSalary);
+            })
+            .catch((error) => {
+                console.error('Error fetching payrolls of staff: ', error);
+            });
     }, [id]);
+
 
     const handleChange = (event) => {
         setSelectedOption(event.target.value);
     };
 
     return (
-        <userInfoContext.Provider value={{ workHistories, setWorkHistories, staffFullInfo, setStaffFullInfo, timesheets, setTimesheets, holidays, setHolidays, staffInfo, setStaffInfo, payrolls }}>
+        <userInfoContext.Provider
+            value={{
+                workHistories, setWorkHistories,
+                staffFullInfo, setStaffFullInfo,
+                timesheets, setTimesheets,
+                holidays, setHolidays,
+                staffInfo, setStaffInfo,
+                payrolls, allAllowances, allBonuses, allDeductions, basicSalary
+            }}>
             <ArrowHeader text="Thông tin nhân viên" />
             {loading ? (
                 <Typography variant="h5" gutterBottom>
@@ -106,16 +134,16 @@ function UserInformation() {
                 </Typography>
             ) : (
                 <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4, marginBottom: 4, overflowY: 'auto', paddingRight: '17px' }}>
-                    <Paper sx={{ minWidth: '90%', display: 'flex', flexDirection: { xs: 'column', md: 'row' }, border: "1px solid" }}>
+                    <Paper sx={{ minWidth: '90%', display: 'flex', flexDirection: { xs: 'column', md: 'row' }, }}>
                         {/* Left section */}
-                        <Profile staffInfo={staffInfo} />
-                        <Divider orientation="vertical" variant="middle" flexItem light={true} />
+
+                        <Box sx={{ width: { xs: '100%', md: '40%' }, position: 'fixed' }}>
+                            <Profile staffInfo={staffInfo} />
+
+                        </Box>
+
                         {/* Right section */}
-                        <Box sx={{ p: 4, width: { xs: '100%', md: '70%' } }}>
-
-
-
-
+                        <Box sx={{ p: 4, width: { xs: '100%', md: '60%' }, minHeight: 600, marginLeft: { xs: '40%' }, border: "1px solid", borderRadius: '8px', }}>
                             <Select
 
                                 value={selectedOption}
@@ -123,7 +151,7 @@ function UserInformation() {
                                 renderValue={(selected) => {
                                     const selectedOption = options.find(option => option.value === selected);
                                     return (
-                                        <Box sx={{ display: 'flex', alignItems: 'center', padding: 0, margin: 0 }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', }}>
                                             <ListItemIcon sx={{ marginRight: 1 }}>{selectedOption.icon}</ListItemIcon>
                                             <ListItemText primary={selectedOption.label} />
                                         </Box>
@@ -131,7 +159,6 @@ function UserInformation() {
                                 }}
                                 sx={{
                                     width: 250,
-                                    maxWidth: 250,
                                     padding: 0,
                                     '& .MuiSelect-select': {
                                         padding: '8px 14px'
